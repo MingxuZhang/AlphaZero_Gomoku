@@ -48,7 +48,7 @@ class TreeNode(object):
         Returns:
         A tuple of (action, next_node)
         """
-        return max(self._children.iteritems(), key=lambda act_node: act_node[1].get_value(c_puct))
+        return max(self._children.items(), key=lambda act_node: act_node[1].get_value(c_puct))
 
     def update(self, leaf_value):
         """Update node values from leaf evaluation.

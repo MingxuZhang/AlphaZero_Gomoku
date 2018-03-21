@@ -41,6 +41,9 @@ class TreeNode(object):
         Returns:
         A tuple of (action, next_node)
         """
+        # print(self._children.items())
+        # print('-------------------')
+        # print([act_node[1].get_value(c_puct) for act_node in self._children.items()])
         return max(self._children.items(), key=lambda act_node: act_node[1].get_value(c_puct))
 
     def update(self, leaf_value):
@@ -106,9 +109,12 @@ class MCTS(object):
         node = self._root
         while(1):            
             if node.is_leaf():
+                # print('break')
                 break                
             # Greedily select next move.
-            action, node = node.select(self._c_puct)            
+            action, node = node.select(self._c_puct)
+            # print(action, node)       
+            # print('**********************')     
             state.do_move(action)
 
         # Evaluate the leaf using a network which outputs a list of (action, probability)

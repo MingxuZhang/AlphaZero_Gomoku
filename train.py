@@ -6,10 +6,10 @@
 from __future__ import print_function
 import random
 import numpy as np
-import cPickle as pickle
+import pickle
 from collections import defaultdict, deque
 from game import Board, Game
-from policy_value_net import PolicyValueNet
+from policy_value_net_keras import PolicyValueNet
 from mcts_pure import MCTSPlayer as MCTS_Pure
 from mcts_alphaZero import MCTSPlayer
 
@@ -67,6 +67,7 @@ class TrainPipeline():
         """collect self-play data for training"""
         for i in range(n_games):
             winner, play_data = self.game.start_self_play(self.mcts_player, temp=self.temp)
+            play_data = list(play_data)[:]
             self.episode_len = len(play_data)
             # augment the data
             play_data = self.get_equi_data(play_data) 
@@ -77,7 +78,8 @@ class TrainPipeline():
         mini_batch = random.sample(self.data_buffer, self.batch_size)
         state_batch = [data[0] for data in mini_batch]
         mcts_probs_batch = [data[1] for data in mini_batch]
-        winner_batch = [data[2] for data in mini_batch]            
+        winner_batch = [data[2] for data in mini_batch]
+        # print('state_batch: ', state_batch,'mcts_batch: ', mcts_probs_batch)            
         old_probs, old_v = self.policy_value_net.policy_value(state_batch) 
         for i in range(self.epochs): 
             loss, entropy = self.policy_value_net.train_step(state_batch, mcts_probs_batch, winner_batch, self.learn_rate*self.lr_multiplier)
@@ -115,7 +117,8 @@ class TrainPipeline():
     def run(self):
         """run the training pipeline"""
         try:
-            for i in range(self.game_batch_num):                
+            for i in range(self.game_batch_num):   
+                # print(i)             
                 self.collect_selfplay_data(self.play_batch_size)
                 print("batch i:{}, episode_len:{}".format(i+1, self.episode_len))                
                 if len(self.data_buffer) > self.batch_size:
