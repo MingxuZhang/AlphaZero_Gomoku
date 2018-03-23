@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """
+An implementation of the policyValueNet with Keras
+Tested under Keras 2.0.5 with tensorflow-gpu 1.2.1 as backend
+
 @author: Mingxu Zhang
 """ 
 
@@ -31,8 +34,8 @@ class PolicyValueNet():
         self._loss_train_op()
 
         if model_file:
-                net_params = pickle.load(open(model_file, 'rb'))
-                self.model.set_weights(net_params)            
+            net_params = pickle.load(open(model_file, 'rb'))
+            self.model.set_weights(net_params)
         
     def create_policy_value_net(self):
         """create the policy value network """   
@@ -89,12 +92,12 @@ class PolicyValueNet():
             state_input_union = np.array(state_input)
             mcts_probs_union = np.array(mcts_probs)
             winner_union = np.array(winner)
-            loss = self.model.evaluate(state_input_union, [mcts_probs_union, winner_union], batch_size=len(state_input))
+            loss = self.model.evaluate(state_input_union, [mcts_probs_union, winner_union], batch_size=len(state_input), verbose=0)
             action_probs, _ = self.model.predict_on_batch(state_input_union)
             entropy = self_entropy(action_probs)
             K.set_value(self.model.optimizer.lr, learning_rate)
-            self.model.fit(state_input_union, [mcts_probs_union, winner_union], batch_size=len(state_input))
-            return loss, entropy
+            self.model.fit(state_input_union, [mcts_probs_union, winner_union], batch_size=len(state_input), verbose=0)
+            return loss[0], entropy
         
         self.train_step = train_step
 
