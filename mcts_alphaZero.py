@@ -45,15 +45,8 @@ class TreeNode(object):
         plus bonus u(P).
         Return: A tuple of (action, next_node)
         """
-<<<<<<< HEAD
-        # print(self._children.items())
-        # print('-------------------')
-        # print([act_node[1].get_value(c_puct) for act_node in self._children.items()])
-        return max(self._children.items(), key=lambda act_node: act_node[1].get_value(c_puct))
-=======
         return max(self._children.items(),
                    key=lambda act_node: act_node[1].get_value(c_puct))
->>>>>>> upstream/master
 
     def update(self, leaf_value):
         """Update node values from leaf evaluation.
@@ -118,18 +111,9 @@ class MCTS(object):
         node = self._root
         while(1):
             if node.is_leaf():
-<<<<<<< HEAD
-                # print('break')
-                break                
-            # Greedily select next move.
-            action, node = node.select(self._c_puct)
-            # print(action, node)       
-            # print('**********************')     
-=======
                 break
             # Greedily select next move.
             action, node = node.select(self._c_puct)
->>>>>>> upstream/master
             state.do_move(action)
 
         # Evaluate the leaf using a network which outputs a list of
@@ -220,15 +204,21 @@ class MCTSPlayer(object):
                 move = np.random.choice(acts, p=probs)
                 # reset the root node
 <<<<<<< HEAD
+<<<<<<< HEAD
                 self.mcts.update_with_move(-1)             
                 location = board.move_to_location(move)
                 print("AI move: %d,%d\n" % (location[0], location[1]))
                 
 =======
+=======
+>>>>>>> upstream/master
                 self.mcts.update_with_move(-1)
 #                location = board.move_to_location(move)
 #                print("AI move: %d,%d\n" % (location[0], location[1]))
 
+<<<<<<< HEAD
+>>>>>>> upstream/master
+=======
 >>>>>>> upstream/master
             if return_prob:
                 return move, move_probs
